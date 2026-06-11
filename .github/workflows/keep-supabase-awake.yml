@@ -1,0 +1,36 @@
+name: Keep Supabase Awake
+
+on:
+  schedule:
+    # Ejecuta cada 2 días a las 10:00 UTC
+    - cron: '0 10 */2 * *'
+
+  # Permite ejecutarlo manualmente desde GitHub
+  workflow_dispatch:
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          echo "Enviando keep-alive a Supabase..."
+
+          RESPONSE=$(curl -s -o response.txt -w "%{http_code}" \
+            -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive_logs" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=minimal" \
+            -d '{"source":"github-actions","status":"ok"}')
+
+          echo "Código HTTP: $RESPONSE"
+          cat response.txt || true
+
+          if [ "$RESPONSE" -lt 200 ] || [ "$RESPONSE" -ge 300 ]; then
+            echo "Error al hacer ping a Supabase"
+            exit 1
+          fi
+
+          echo "Supabase keep-alive ejecutado correctamente."
