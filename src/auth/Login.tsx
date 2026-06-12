@@ -4,10 +4,12 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight,
   BarChart3,
+  BookOpenCheck,
   ChevronDown,
   CloudSun,
   Coins,
   Database,
+  ExternalLink,
   EyeOff,
   Fingerprint,
   HeartPulse,
@@ -73,6 +75,9 @@ const heroFeatures = [
     text: 'lugar'
   }
 ];
+const USER_MANUAL_URL =
+  'https://drive.google.com/file/d/1gJdXSSEWZpFSql9smN3QAKbOhOiasCj8/view?usp=sharing';
+
 
 export default function Login() {
   const { setRole, createAudit } = useAgro();
@@ -170,24 +175,23 @@ export default function Login() {
             Usa el acceso demo o escribe tus datos cuando conectes Supabase Auth.
           </p>
 
-          <div className="login-v2-demo-select">
-            <span>Demo sugerido</span>
+          <a
+            className="login-v2-manual-button"
+            href={USER_MANUAL_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span className="login-v2-manual-icon">
+              <BookOpenCheck size={20} />
+            </span>
 
-            <label className="login-v2-role-select">
-              <select
-                value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value as Role)}
-              >
-                {roles.map((item) => (
-                  <option key={item.role} value={item.role}>
-                    {roleNames[item.role]}
-                  </option>
-                ))}
-              </select>
+            <span className="login-v2-manual-copy">
+              <strong>Ver manual de usuario</strong>
+              <small>Guía rápida para conocer roles, módulos y funcionalidades.</small>
+            </span>
 
-              <ChevronDown size={16} />
-            </label>
-          </div>
+            <ExternalLink size={18} className="login-v2-manual-arrow" />
+          </a>
 
           <label className="login-v2-field">
             <span>Email</span>
